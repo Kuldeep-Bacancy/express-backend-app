@@ -28,7 +28,6 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
   // check empty validations from request body fields
   if ([fullName, email, username, password].some((field) => field?.trim() === "")) {
-    console.log("if called!!!");
     return res.status(400).json(
       new ApiResponse(400, "All fields are required!")
     )
