@@ -16,4 +16,10 @@ app.use(express.static("public")) // To handle static assets
 app.use(cookieParser()) // To set and get cookies from client
 
 
-export default app; 
+//routes
+import userRouter from "./routes/user.routes.js"
+
+app.use('/api/v1/users', userRouter)
+
+
+export default app
