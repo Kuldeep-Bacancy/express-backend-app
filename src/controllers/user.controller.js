@@ -301,7 +301,11 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
-  const avatarLocalPath = req.file?.path
+  let avatarLocalPath;
+
+  if (req.files && Array.isArray(req.files.avatar) && req.files.avatar.length > 0) {
+    avatarLocalPath = req.files.avatar[0].path
+  }
 
   if (!avatarLocalPath) {
     return res.status(400).json(
