@@ -313,12 +313,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     )
   }
 
-  const publicID = getPublicIdFromURL(req.user?.avatar)
-
-  if (publicID){
-    await deleteImageFromCloudinary(publicID);
-  }
-
+  const oldAvatarImageURL = req.user?.avatar
   const avatar = await uploadOnCloudinary(avatarLocalPath)
 
   if (!avatar.url) {
@@ -326,6 +321,12 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
       new ApiResponse(400, "Error while uploading on avatar")
     )
 
+  }
+
+  const publicID = getPublicIdFromURL(oldAvatarImageURL)
+
+  if (publicID) {
+    await deleteImageFromCloudinary(publicID);
   }
 
   const user = await User.findByIdAndUpdate(
@@ -336,7 +337,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
       }
     },
     { new: true }
-  ).select("-password")
+  ).select("-password -refreshToken")
 
   return res
     .status(200)
