@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary"
 import fs from "fs"
-
+import { CLOUDINARY_IMAGE_REGEX } from "../constants.js"
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -26,4 +26,19 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 }
 
-export default uploadOnCloudinary
+const getPublicIdFromURL = (url) => {
+  const regex = CLOUDINARY_IMAGE_REGEX
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+const deleteImageFromCloudinary = async (publicId) => {
+  try {
+    const response = await cloudinary.uploader.destroy(publicId);
+    return response;
+  } catch (error) {
+    return null
+  }
+}
+
+export { uploadOnCloudinary, deleteImageFromCloudinary, getPublicIdFromURL }
